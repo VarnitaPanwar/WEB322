@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Lego Collection</title>
+  <link rel="stylesheet" href="/css/main.css">
+</head>
+
+<body>
+  <div class="navbar bg-base-100">
+    <div class="flex-1">
+      <a class="btn btn-ghost normal-case text-xl">daisyUI</a>
+    </div>
+
+    <div class="navbar-center flex">
+      <ul class="menu menu-horizontal px-1">
+        <li><a>Link</a></li>
+        <li>
+          <details>
+            <summary>Parent</summary>
+            <ul class="p-2 bg-base-100 right-0">
+              <li><a>Link 1</a></li>
+              <li><a>Link 2</a></li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Hero Component -->
+  <div class="container mx-auto p-8">
+    <div class="bg-blue-100 rounded-lg p-4">
+      <h1 class="text-4xl font-bold text-center mb-4">Explore Our Lego Collection</h1>
+      <p class="text-center">Discover a world of Lego sets waiting for you to explore. <a href="/lego/sets" class="btn">Explore Now</a></p>
+    </div>
+  </div>
+
+  <!-- Responsive Grid with Card Components -->
+  <div class="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <!-- Card Component (Repeat for each set) -->
+    <div class="bg-white rounded-lg p-4 shadow-md">
+      <img src="IMAGE_URL" alt="Set Name" class="mb-2">
+      <h2 class="text-lg font-semibold">Set Name</h2>
+      <p class="text-gray-500 text-sm mb-4">Set Description...</p>
+      <a href="/lego/sets/set_num" class="btn">View Details</a>
+    </div>
+    <!-- Repeat card components for other sets -->
+  </div>
+</body>
+
+</html>
