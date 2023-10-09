@@ -8,47 +8,59 @@
 * 
 * Name: Varnita Panwar Student ID: 166484212 Date: 
 *
+* Published URL:
+*
 ********************************************************************************/
 const express = require("express");
+const path = require("path");
 const app = express();
-const port = 3000;
+const HTTP_PORT = 3000;
 const legoData = require("./modules/legoSets");
 app.use(express.static('public'));
 legoData
     .initialize()
     .then(async () => {
-        app.get("/", (req, res) => {
-            res.send("Assignment 2: Varnita Panwar - 166484212");
+        app.get('/', (req, res) => {
+            res.sendFile(path.join(__dirname, "/views/home.html"))
+        });
+        app.get('/about', (req, res) => {
+            res.sendFile(path.join(__dirname, "/views/about.html"))
         });
         app.get("/lego/sets", async (req, res) => {
-            const allSets = await legoData.getAllSets();
-            res.json(allSets);
+            const theme = req.query.theme;
+            if (!theme) {
+                legoData.getAllSets()
+                    .then((sets) => {
+                        res.json(sets);
+                    })
+                    .catch((error) => {
+                        res.status(404).json({ error: "Error retrieving Lego sets." });
+                    });
+            } else {
+                legoData.getSetsByTheme(theme)
+                    .then((sets) => {
+                        res.json(sets);
+                    })
+                    .catch((error) => {
+                        res.status(404).json({ error: "Error retrieving Lego sets for the specified theme." });
+                    });
+            }
         });
-        app.get("/lego/sets/num-demo", (req, res) => {
-            const setNum = "001-1";
+        app.get("/lego/sets/:setNum", (req, res) => {
+            const setNum = req.params.setNum; 
             legoData
                 .getSetByNum(setNum)
-                .then((set) => {
+                .then(() => {
                     res.json(set);
                 })
                 .catch((error) => {
-                    res.status(404).send("Error: " + error);
+                    res.status(404).json({ error: error });
                 });
         });
-        app.get("/lego/sets/theme-demo", (req, res) => {
-            const theme = "tech";
-            legoData
-                .getSetsByTheme(theme)
-                .then((sets) => {
-                    res.json(sets);
-                })
-                .catch((error) => {
-                    res.status(404).send("Error: " + error);
-                });
+        app.use((req, res) => {
+            res.status(404).sendFile(path.join(__dirname, "/views/404.html"))
         });
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        });
+        app.listen(HTTP_PORT, () => { console.log(`server listening on: ${HTTP_PORT}`) });
     })
     .catch((error) => {
         console.error("Error initializing legoData:", error);
