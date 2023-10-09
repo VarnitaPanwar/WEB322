@@ -6,9 +6,9 @@
 * 
 * https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
 * 
-* Name: Varnita Panwar Student ID: 166484212 Date: 
+* Name: Varnita Panwar Student ID: 166484212 Date: 09/10/2023
 *
-* Published URL:
+* Published URL: https://kind-teal-nightingale-cap.cyclic.app/
 *
 ********************************************************************************/
 const express = require("express");
@@ -50,7 +50,7 @@ legoData
             const setNum = req.params.setNum; 
             legoData
                 .getSetByNum(setNum)
-                .then(() => {
+                .then((set) => {
                     res.json(set);
                 })
                 .catch((error) => {
