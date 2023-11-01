@@ -1,12 +1,12 @@
 /********************************************************************************
-* WEB322 – Assignment 03
+* WEB322 – Assignment 04
 * 
 * I declare that this assignment is my own work in accordance with Seneca's
 * Academic Integrity Policy:
 * 
 * https://www.senecacollege.ca/about/policies/academic-integrity-policy.html
 * 
-* Name: Varnita Panwar Student ID: 166484212 Date: 09/10/2023
+* Name: Varnita Panwar Student ID: 166484212 Date: 01/11/2023
 *
 * Published URL: https://kind-teal-nightingale-cap.cyclic.app/
 *
@@ -16,33 +16,35 @@ const path = require("path");
 const app = express();
 const HTTP_PORT = 3000;
 const legoData = require("./modules/legoSets");
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 legoData
     .initialize()
     .then(async () => {
         app.get('/', (req, res) => {
-            res.sendFile(path.join(__dirname, "/views/home.html"))
+            res.render("home")
         });
         app.get('/about', (req, res) => {
-            res.sendFile(path.join(__dirname, "/views/about.html"))
+            res.render("about")
         });
         app.get("/lego/sets", async (req, res) => {
             const theme = req.query.theme;
             if (!theme) {
                 legoData.getAllSets()
                     .then((sets) => {
-                        res.json(sets);
+                        res.render("sets", { set: sets });
                     })
                     .catch((error) => {
-                        res.status(404).json({ error: "Error retrieving Lego sets." });
+                        res.status(404).render("404", { message: "Error retrieving Lego sets." });
                     });
             } else {
                 legoData.getSetsByTheme(theme)
                     .then((sets) => {
-                        res.json(sets);
+                        res.render("sets", { set: sets });
                     })
                     .catch((error) => {
-                        res.status(404).json({ error: "Error retrieving Lego sets for the specified theme." });
+                        res.status(404).render("404", { message: "Error retrieving Lego sets for the specified theme." });
                     });
             }
         });
@@ -51,14 +53,14 @@ legoData
             legoData
                 .getSetByNum(setNum)
                 .then((set) => {
-                    res.json(set);
+                    res.render("set", { set: set });
                 })
                 .catch((error) => {
-                    res.status(404).json({ error: error });
+                    res.status(404).render("404", { message: error });
                 });
         });
         app.use((req, res) => {
-            res.status(404).sendFile(path.join(__dirname, "/views/404.html"))
+            res.status(404).render("404", { message: "I'm sorry, we're unable to find what you're looking for" })
         });
         app.listen(HTTP_PORT, () => { console.log(`server listening on: ${HTTP_PORT}`) });
     })
